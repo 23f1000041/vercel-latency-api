@@ -7,6 +7,13 @@ app = FastAPI()
 
 from fastapi import Response
 
+@app.get("/api/latency")
+def latency_get_probe():
+    return {
+        "message": "POST only endpoint. Use POST with JSON body."
+    }
+
+
 @app.options("/api/latency")
 def options_latency():
     return Response(
@@ -18,6 +25,13 @@ def options_latency():
         },
     )
 
+@app.middleware("http")
+async def force_cors_headers(request, call_next):
+    response = await call_next(request)
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "*"
+    return response
 
 # Enable CORS for POST requests from any origin
 app.add_middleware(
