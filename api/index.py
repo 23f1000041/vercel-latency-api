@@ -5,6 +5,20 @@ import numpy as np
 
 app = FastAPI()
 
+from fastapi import Response
+
+@app.options("/api/latency")
+def options_latency():
+    return Response(
+        status_code=200,
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+        },
+    )
+
+
 # Enable CORS for POST requests from any origin
 app.add_middleware(
     CORSMiddleware,
